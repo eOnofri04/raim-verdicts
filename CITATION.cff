@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software or the released verdicts, please cite the paper below."
+title: "RAIM-verdicts: the measurement half of RAIM (judge panel, reference judges, and the released verdicts)"
+type: software
+authors:
+  - family-names: Onofri
+    given-names: Elia
+    affiliation: King Abdullah University of Science and Technology (KAUST)
+    orcid: "https://orcid.org/0000-0001-8391-2563"
+  - family-names: Di Pietro
+    given-names: Roberto
+    affiliation: King Abdullah University of Science and Technology (KAUST)
+    orcid: "https://orcid.org/0000-0003-1909-0336"
+repository-code: "https://github.com/eOnofri04/raim-verdicts"
+license: CC-BY-NC-SA-4.0
+version: "0.1.0"
+keywords:
+  - hallucination detection
+  - LLM-as-a-judge
+  - judge panels
+  - stacked aggregation
+preferred-citation:
+  type: article
+  title: "RAIM: Robust Aggregation of Inexpensive Models for Hallucination Detection"
+  authors:
+    - family-names: Onofri
+      given-names: Elia
+      affiliation: King Abdullah University of Science and Technology (KAUST)
+      orcid: "https://orcid.org/0000-0001-8391-2563"
+    - family-names: Di Pietro
+      given-names: Roberto
+      affiliation: King Abdullah University of Science and Technology (KAUST)
+      orcid: "https://orcid.org/0000-0003-1909-0336"
+  year: 2026
+  journal: "arXiv preprint"
+  identifiers:
+    - type: other
+      value: "arXiv:2609.39229"
+      description: arXiv identifier
+  url: "https://arxiv.org/abs/2609.39229"

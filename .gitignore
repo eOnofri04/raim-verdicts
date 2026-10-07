@@ -1,0 +1,27 @@
+# Zone 1 output: the verdicts themselves (167 MB, irreproducible). They are
+# committed compressed, as runs.tar.xz, and `make runs` unpacks them here; the
+# unpacked tree never goes to git. See README, "Artefact zones".
+runs/
+runs_claimcheck/
+runs_defon_aggrefact/
+
+# The mock panel `make smoke` writes and deletes. Never part of zone 1.
+.smoke/
+
+# Third-party source data, not redistributed (see NOTICE §3). FActScore's
+# annotation release is obtained from its authors; tools/fetch_factscore.py verifies it.
+datasets/*.jsonl
+
+# The environment the README's install block creates, and the default interpreter
+# of the Makefile and the scripts.
+.venv/
+
+__pycache__/
+*.pyc
+raim.egg-info/
+
+.DS_Store
+*tmp*
+
+# tools/coverage_report.py output: it records the host it ran on.
+coverage_report.md

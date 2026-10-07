@@ -1,0 +1,152 @@
+NOTICE — third-party sources, and what this repository does and does not redistribute
+=====================================================================================
+
+This repository is licensed under CC BY-NC-SA 4.0 (see LICENSE). That covers the
+code and the measurements we produce. It does not, and cannot, relicense the
+benchmarks those measurements were taken on. This file records each source's own
+terms and our position with respect to them.
+
+Licence tags below were read from the Hugging Face API and the upstream
+repositories on 2026-08-04, not from memory or from a summary. Where a source
+declares nothing, this file says so rather than guessing.
+
+
+1. What is NOT redistributed here
+---------------------------------
+
+No question, document, context passage or candidate answer from any source
+benchmark appears in this repository or in the verdict data it produces.
+
+A verdict record carries only: the instance identifiers, the gold label, the
+stratum and category, a content-addressed join key, the judging condition and
+format, our model's parsed prediction, and our model's raw generation. The
+generations are our own model outputs, not source text.
+
+The join index (dataset_index/) carries one-way SHA-1 digests over question,
+context and candidate. A digest does not reproduce its input; it lets a third
+party who has independently obtained a benchmark verify that our identifiers
+line up with theirs.
+
+This is a deliberate design choice, not a happy accident. It is what allows the
+measurements to be published under our own terms whilst leaving every source
+benchmark to be obtained from its own publisher, under its own licence.
+
+As of 2026-08-04 there is no exception: nothing third-party is redistributed
+here. See section 3 for the one file that previously was.
+
+
+2. Source benchmarks
+--------------------
+
+MedHallu — grounded medical faithfulness
+    Hugging Face: UTAustin-AIHealth/MedHallu, config pqa_labeled
+    Pinned revision: 515060458a945c633debc6fd5baac7764416b724
+    Licence: NONE DECLARED. The dataset carries no licence tag on the Hub and
+        its card states no terms; there is no corresponding public repository
+        under that organisation. It is derived from PubMedQA, which is MIT.
+        Anyone wishing to redistribute MedHallu content should approach the
+        authors; we redistribute none.
+    Cite: Pandit, Xu, Hong, Wang, Chen, Xu and Ding. "MedHallu: A Comprehensive
+        Benchmark for Detecting Medical Hallucinations in Large Language
+        Models." EMNLP 2025. arXiv:2502.14302.
+
+RAGTruth — grounded retrieval-augmented faithfulness
+    Hugging Face: wandb/RAGTruth-processed (a re-cast mirror)
+    Pinned revision: eb4f4b9d1b68eb7092d3e1a61c0cd82d9808737b
+    Licence: the mirror declares none. The upstream corpus,
+        github.com/ParticleMedia/RAGTruth, is MIT.
+    Cite: Niu, Wu, Zhu, Xu, Shum, Zhong, Song and Zhang. "RAGTruth: A
+        Hallucination Corpus for Developing Trustworthy Retrieval-Augmented
+        Language Models." ACL 2024.
+
+TruthfulQA — ungrounded world-factuality
+    Hugging Face: truthfulqa/truthful_qa, config generation
+    Pinned revision: 741b8276f2d1982aa3d5b832d3ee81ed3b896490
+    Licence: Apache-2.0.
+    Cite: Lin, Hilton and Evans. "TruthfulQA: Measuring How Models Mimic Human
+        Falsehoods." ACL 2022. arXiv:2109.07958.
+
+LLM-AggreFact — grounded claim verification (XSum, WiCE, CNN, ExpertQA subsets)
+    Hugging Face: lytang/LLM-AggreFact
+    Pinned revision: 981dfd0bd8e58e7238a9ab92b2e6ea44bce918e4
+    Licence: CC BY-ND 4.0. Access is gated, and acceptance carries the
+        condition that "Data in the benchmark should not be used in pretraining
+        or fine-tuning any NLP models."
+    Cite: Tang, Laban and Durrett. "MiniCheck: Efficient Fact-Checking of LLMs
+        on Grounding Documents." EMNLP 2024. arXiv:2404.10774.
+    This source has the most restrictive terms of the five, and both clauses
+        deserve a plain answer:
+      - NoDerivatives. We distribute no adapted or transformed copy of the
+        benchmark. We distribute measurements about it, together with one-way
+        digests that cannot reconstruct it. A reader must obtain the benchmark
+        from its publisher, accepting the gate, exactly as we did.
+      - No pretraining or fine-tuning. We do not train any language model on
+        this data. It is used for evaluation only. The one supervised component
+        in the method is a logistic regression over ten judges' binary verdicts,
+        cross-fitted over held-out folds; it has ten features, never sees text,
+        and is the object of study rather than a model being improved. We read
+        the condition as aimed at benchmark contamination, and believe this
+        respects it, but we state the fact plainly so a reader can judge.
+
+FActScore — ungrounded biographical factuality
+    Not a Hub dataset; a file obtained by hand. See section 3.
+    Licence: MIT (github.com/shmsw25/FActScore).
+    Cite: Min, Krishna, Lyu, Lewis, Yih, Koh, Iyyer, Zettlemoyer and Hajishirzi.
+        "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long
+        Form Text Generation." EMNLP 2023.
+
+
+3. FActScore's annotation release: obtained, not redistributed
+--------------------------------------------------------------
+
+Until 2026-08-04 this repository committed datasets/InstructGPT.jsonl, the
+FActScore human-annotation release. It no longer does. The file is obtained from
+its authors like every other source, datasets/ is gitignored, and
+tools/fetch_factscore.py gives the download route and verifies the result.
+
+Contents, for anyone deciding whether they need it: 183 people, each with a
+biography generated by OpenAI's InstructGPT in response to "Tell me a bio of
+<person>", broken into 1,123 annotated sentences and 4,726 human-labelled atomic
+facts (2,100 supported, 1,971 not supported, 655 irrelevant), plus a rarity and
+region bucket per person. Distributed by its authors through a Google Drive link
+in the README of github.com/shmsw25/FActScore, as data/labeled/InstructGPT.jsonl.
+MIT licensed.
+
+The checksum guard remains, and matters more now than when the file was
+committed. The FActScore builder keys each instance by LINE NUMBER, and the
+siblings ChatGPT.jsonl and PerplexityAI.jsonl share the schema exactly -- so a
+substitution, or a re-download in a different order, yields 330 plausible
+instances joined to entirely different biographies with nothing raising.
+raim/tasks.py pins FACTSCORE_SHA256 against the copy the reported verdicts were
+produced against, and the builder refuses any other file unless
+FACTSCORE_ALLOW_UNVERIFIED is set.
+
+Nothing is lost by not shipping it: the authoritative record of which instances
+were used is dataset_index/factscore.jsonl, which is committed, content-addressed
+and verifiable against any copy of the source.
+
+
+4. Judged models
+----------------
+
+The ten panel members, the frontier and scaling judges, and the purpose-trained
+judges are each obtained from their own publishers under their own licences,
+which this repository neither includes nor alters. Two panel members are gated
+on Hugging Face and require accepting their licences before a run. Model weights
+are never redistributed here; only the verdicts they produced.
+
+Judgments obtained through paid APIs (e.g. Anthropic) are subject to those
+providers' terms as they stood at the time of the runs.
+
+
+5. Summary
+----------
+
+    source                  licence                    redistributed here?
+    ----------------------------------------------------------------------
+    MedHallu                none declared              no
+    RAGTruth                MIT (upstream)             no
+    TruthfulQA              Apache-2.0                 no
+    LLM-AggreFact           CC BY-ND 4.0, gated        no
+    FActScore annotations   MIT                        no — see section 3
+    model weights           various                    no
