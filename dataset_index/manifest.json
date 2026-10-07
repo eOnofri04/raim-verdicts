@@ -1,0 +1,88 @@
+{
+  "note": "Join index for the RAIM verdict release. src_sha1 = sha1 over question, context items and candidate, NUL-separated. Upstream revisions were not pinned when the reported runs were produced, so this index -- not any upstream snapshot -- is the authoritative mapping for the released verdicts. Verify with joincheck.py.",
+  "builder": "raim/tasks.py",
+  "generator": "dataset_index.py",
+  "built_offline": true,
+  "datasets": {
+    "medhallu": {
+      "n": 2000,
+      "n_row_clusters": 1000,
+      "class_balance": {
+        "0": 1000,
+        "1": 1000
+      },
+      "distinct_content_keys": 2000,
+      "duplicate_content_keys": 0
+    },
+    "ragtruth": {
+      "n": 1362,
+      "n_row_clusters": 681,
+      "class_balance": {
+        "0": 681,
+        "1": 681
+      },
+      "distinct_content_keys": 1362,
+      "duplicate_content_keys": 0
+    },
+    "truthfulqa": {
+      "n": 1634,
+      "n_row_clusters": 817,
+      "class_balance": {
+        "0": 817,
+        "1": 817
+      },
+      "distinct_content_keys": 1634,
+      "duplicate_content_keys": 0
+    },
+    "factscore": {
+      "n": 330,
+      "n_row_clusters": 165,
+      "class_balance": {
+        "0": 165,
+        "1": 165
+      },
+      "distinct_content_keys": 330,
+      "duplicate_content_keys": 0
+    },
+    "aggrefact_xsum": {
+      "n": 546,
+      "n_row_clusters": 472,
+      "class_balance": {
+        "0": 273,
+        "1": 273
+      },
+      "distinct_content_keys": 546,
+      "duplicate_content_keys": 0
+    },
+    "aggrefact_wice": {
+      "n": 222,
+      "n_row_clusters": 221,
+      "class_balance": {
+        "0": 111,
+        "1": 111
+      },
+      "distinct_content_keys": 222,
+      "duplicate_content_keys": 0
+    },
+    "aggrefact_cnn": {
+      "n": 114,
+      "n_row_clusters": 109,
+      "class_balance": {
+        "0": 57,
+        "1": 57
+      },
+      "distinct_content_keys": 114,
+      "duplicate_content_keys": 0
+    },
+    "aggrefact_expertqa": {
+      "n": 1462,
+      "n_row_clusters": 1360,
+      "class_balance": {
+        "0": 731,
+        "1": 731
+      },
+      "distinct_content_keys": 1462,
+      "duplicate_content_keys": 0
+    }
+  }
+}
