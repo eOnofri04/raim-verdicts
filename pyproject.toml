@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "raim"
+version = "0.1.0"
+description = "RAIM: Robust Aggregation of Inexpensive Models -- evaluation toolkit"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[tool.setuptools]
+packages = ["raim"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements-core.txt"] }

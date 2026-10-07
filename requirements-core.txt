@@ -1,0 +1,17 @@
+# The core tier: enough to build every dataset, verify the join against
+# dataset_index/, run the mock panel end to end, and execute both offline test
+# suites. Verified in a clean virtual environment on 2026-08-04 (Python 3.13.2).
+#
+# The heavier tiers are NOT listed here, because they are imported lazily and
+# a machine should install only what it will run:
+#   local inference : vllm, transformers          (a GPU box only)
+#   paid judges     : anthropic, requests
+#   specialists     : minicheck                   (scripts/run_minicheck.py, own venv)
+#   optional        : matplotlib                  (scripts/run.py's diagnostic PNGs)
+#
+# datasets is pinned rather than bounded: a newer release could alter row
+# ordering or split handling by itself, and since every instance identifier is
+# positional over the loaded rows, that would silently re-point the join.
+numpy==2.5.0
+scikit-learn==1.9.0
+datasets==5.0.0
