@@ -437,7 +437,7 @@ If you use this code or the released verdicts, please cite the paper:
 ```
 
 GitHub's "Cite this repository" button reads the same entry from `CITATION.cff`.
-The software itself is archived on Zenodo under the concept DOI [10.5281/zenodo.23233720](https://doi.org/10.5281/zenodo.23233720), which always resolves to the latest release.
+The software itself is archived on Zenodo under the concept DOI [10.5281/zenodo.23233720](https://doi.org/10.5281/zenodo.23233720).
 
 ## Licence
 
