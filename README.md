@@ -12,6 +12,17 @@ This is the measurement half of the companion code for the paper:
 > _Computer, Electrical and Mathematical Sciences and Engineering (CEMSE) Division, King Abdullah University of Science and Technology (KAUST), Thuwal, Saudi Arabia_  
 > [arXiv:2609.39229](https://arxiv.org/abs/2609.39229)
 
+![RAIM overview, Figure 1 of the paper, with the benchmark item and the judges in colour](assets/overview.png)
+
+_Figure 1 of the paper, redrawn.
+In colour, what this repository reads and produces: the benchmark item, the panel of ten judges, and the frontier judge, both reading that item; [`raim-analysis`](https://github.com/eOnofri04/raim-analysis) covers the rest, in grey._
+
+| Frontier quality retained | Cost per 1,000 items | Break-even against the API |
+|---|---|---|
+| a median 93% of Claude Sonnet's Cohen's κ, giving up 2.9 points of balanced accuracy on average | \$0.039 against \$2.52, some 64× cheaper | 40,309 to 80,618 items, for a one-time calibration of 50 to 100 labelled records |
+
+_The paper's headline numbers; `make numbers` in [`raim-analysis`](https://github.com/eOnofri04/raim-analysis) prints each beside the file and key it is read from._
+
 Large language models are increasingly used as automatic judges of whether a generated response is faithful to its source, yet the strongest judges are proprietary and costly to run at scale.
 RAIM asks whether a panel of cheap, open-weight small judges —ten models between 4 and 9 billion parameters— can be aggregated into a viable alternative to a single strong judge, and, more usefully, *when* it can.
 This repository is the instrument that produces the evidence: it runs the panel and a set of reference judges over eight faithfulness benchmarks, and records what each judge said about each item.
