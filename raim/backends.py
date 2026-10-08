@@ -7,6 +7,7 @@ can synthesize realistic verdicts; the vLLM backend ignores meta.
 from __future__ import annotations
 import hashlib
 import math
+import os
 import random
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -254,6 +255,12 @@ class VLLMBackend(Backend):
     as the card(s) allow.
     """
     def __init__(self, model_name: str, **kw):
+        # Decoding is greedy (TEMPERATURE = 0.0, no top_p or top_k), so vLLM's
+        # FlashInfer top-p/top-k sampler filters nothing; left on, it JIT-compiles a
+        # kernel at the first sampling step, which fails wherever the system CUDA
+        # toolkit is older than 12 or the venv's `ninja` is not on PATH. Off unless
+        # the environment says otherwise; the engine's subprocesses inherit it.
+        os.environ.setdefault("VLLM_USE_FLASHINFER_SAMPLER", "0")
         from vllm import LLM, SamplingParams
         from transformers import AutoTokenizer
         self.name = model_name

@@ -152,6 +152,7 @@ export PY=$PWD/.venv/bin/python3                    # the interpreter every comm
 make runs PY=$PY                                    # unpack runs.tar.xz into runs/ and verify it
 ```
 
+The pinned versions need Python 3.12 or later, so `python3` above must name such an interpreter; where the system one is older (Ubuntu 22.04 ships 3.10), use a newer one explicitly, for instance `python3.12 -m venv .venv` or a conda base Python.
 That is enough to build every dataset, verify the join, verify the released judgements, run the mock panel, and execute the offline test suites.
 FActScore is the one exception: building it, and hence `tools/joincheck.py` and `make check`, first needs its annotation file, which is not redistributed here; `$PY tools/fetch_factscore.py` gives the download route and verifies the result (see [Licence](#licence)).
 The editable install is what lets `tests/` and `diagnostics/` `import raim` without living next to the package; every orchestration script still resolves its interpreter explicitly (see below), so this is the only place an activated environment matters.
@@ -167,6 +168,7 @@ The heavy dependencies are imported lazily, inside the methods that need them, s
 
 `datasets` is pinned rather than bounded.
 A newer release could alter row ordering or split handling by itself, and since every instance identifier is positional over the loaded rows, that would silently re-point the join.
+`numpy`, conversely, is only bounded below (`>=2.3`) in `pyproject.toml`: `pip install vllm` replaces the 2.5.0 of `requirements-core.txt` with the release vLLM supports (2.3.5 under vLLM 0.31.0), and every check passes under either.
 
 One dataset source (`lytang/LLM-AggreFact`, behind the four AggreFact sets) is gated on Hugging Face, so `export HF_TOKEN=...` before a cold build; the Llama-3.1 and gemma-2 weights are gated too, so accept their licences before running the panel.
 

@@ -55,7 +55,7 @@ make check PY=$PY
 
 ### Actually measuring something
 
-Needs a GPU, `pip install vllm transformers`, an `HF_TOKEN` (`lytang/LLM-AggreFact` and the Llama-3.1 and gemma-2 weights are gated), and the FActScore file.
+Needs a GPU, Python 3.12 or later, `pip install vllm transformers`, an `HF_TOKEN` (`lytang/LLM-AggreFact` and the Llama-3.1 and gemma-2 weights are gated), and the FActScore file.
 A re-run writes into `runs/`, so work on a copy if you want to keep the released files as they are.
 
 ```bash
@@ -107,7 +107,8 @@ A directory with no mirror in it needs none of that — `ANALYSIS=/tmp/somewhere
 ## If something breaks
 
 `FRESH_BOX.md` has a troubleshooting section.
-The one you are most likely to hit is a vLLM startup failure compiling CUDA kernels — set `VLLM_USE_FLASHINFER_SAMPLER=0`; the panel decodes greedily, so that sampler does nothing for us anyway.
+The backend turns vLLM's FlashInfer sampler off by default (`VLLM_USE_FLASHINFER_SAMPLER=0`, unless the environment sets the variable): the panel decodes greedily, so that sampler does nothing for us, and left on it compiles CUDA kernels at startup, which fails on many machines.
+A startup failure compiling kernels therefore means the variable is exported as `1`.
 
-The second is `scripts/run_scorer.sh` reporting `### DATASETS PENDING`: a dataset's member files were not all available to assemble, or the gate refused them, so a scoring run above it failed.
+The one you are most likely to hit is `scripts/run_scorer.sh` reporting `### DATASETS PENDING`: a dataset's member files were not all available to assemble, or the gate refused them, so a scoring run above it failed.
 A log of nothing but `[skip] … already holds` means the scoring was complete before you started.

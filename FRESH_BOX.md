@@ -56,6 +56,10 @@ python3 -m venv .venv
 export PY="$RAIMTEST/raim-verdicts/.venv/bin/python3"
 ```
 
+The pinned versions need Python 3.12 or later; where the system `python3` is older (Ubuntu 22.04 ships 3.10), create the venv with a newer interpreter, for instance `python3.12 -m venv .venv` or a conda base Python.
+
+Installing `vllm` replaces the `numpy` of `requirements-core.txt` with the release vLLM supports (2.3.5 under vLLM 0.31.0); `raim` accepts any `numpy` from 2.3, and every check passes under either.
+
 Pin `datasets==5.0.0` as the requirements file does.
 A newer release can change row ordering or split handling by itself, and since every instance identifier is positional over the loaded rows, a `DRIFT` verdict in step 4 would then not distinguish upstream having moved from the library having moved.
 
@@ -79,11 +83,14 @@ Both affect `scripts/run_lpscore.py`, so run that separately and read the printe
 
 ### If the run dies before generating anything
 
-**`RuntimeError: Ninja build failed` / `error: "CUDA versions below 12 are not supported."`**
+**`RuntimeError: Ninja build failed` / `error: "CUDA versions below 12 are not supported."` / `FileNotFoundError: [Errno 2] No such file or directory: 'ninja'`**
 
 The model loads (`Loading safetensors checkpoint shards: 100%`) and the failure comes at the first sampling step, inside `flashinfer_sample`.
-vLLM logged `Using FlashInfer for top-p & top-k sampling` and then tried to JIT-compile that kernel with `/usr/bin/nvcc` — the *system* toolkit, which is older than CUDA 12.
-`nvidia-smi` reporting a CUDA version of 12 or above does not contradict this: that is the driver's ceiling, not the toolkit's version.
+vLLM logged `Using FlashInfer for top-p & top-k sampling` and then tried to JIT-compile that kernel, with `/usr/bin/nvcc` — the *system* toolkit, which may be older than CUDA 12 — and with the `ninja` of the venv, which is not on `PATH` unless the venv is activated.
+`nvidia-smi` reporting a CUDA version of 12 or above does not contradict the first: that is the driver's ceiling, not the toolkit's version.
+
+`raim/backends.py` therefore turns that sampler off itself before loading a model, by setting `VLLM_USE_FLASHINFER_SAMPLER=0` unless the environment already sets the variable, so none of these errors should appear.
+If one does, the variable is exported as `1` somewhere; unset it, or export it as `0`:
 
 ```bash
 export VLLM_USE_FLASHINFER_SAMPLER=0
@@ -93,7 +100,7 @@ export VLLM_USE_FLASHINFER_SAMPLER=0
 `raim/backends.py` sets `TEMPERATURE = 0.0` and never sets `top_p` or `top_k`, so decoding is greedy and the top-p/top-k sampler does no filtering at all — it is pure overhead on this workload.
 Disabling it removes a code path we do not use.
 
-The alternative is to install a CUDA toolkit of 12 or later and point `CUDA_HOME` at it.
+Should you want the sampler regardless, install a CUDA toolkit of 12 or later, point `CUDA_HOME` at it, activate the venv so that its `ninja` is on `PATH`, and export `VLLM_USE_FLASHINFER_SAMPLER=1`.
 A venv built with `--system-site-packages` off also avoids mixing another Python distribution's headers into the compile.
 
 ## 3. The one file that is not in the repository

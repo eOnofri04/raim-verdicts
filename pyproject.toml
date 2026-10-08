@@ -6,11 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "raim"
 version = "0.1.0"
 description = "RAIM: Robust Aggregation of Inexpensive Models -- evaluation toolkit"
-requires-python = ">=3.10"
-dynamic = ["dependencies"]
+requires-python = ">=3.12"
+# requirements-core.txt pins the exact versions of the no-GPU environment; numpy is
+# only bounded below here, because `pip install vllm` replaces it with the release
+# vLLM supports, and every check passes under either.
+dependencies = ["numpy>=2.3", "scikit-learn==1.9.0", "datasets==5.0.0"]
 
 [tool.setuptools]
 packages = ["raim"]
 
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements-core.txt"] }
