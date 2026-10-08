@@ -33,6 +33,8 @@ git clone https://github.com/eOnofri04/raim-verdicts.git
 git clone https://github.com/eOnofri04/raim-analysis.git
 ```
 
+`QUICKSTART.md` is the short version of this page: whether you need this repository at all, and the three commands that check a checkout.
+
 ## Table of contents
 
 1. [What this repository produces](#what-this-repository-produces)
@@ -140,6 +142,7 @@ make runs PY=$PY                                    # unpack runs.tar.xz into ru
 ```
 
 That is enough to build every dataset, verify the join, verify the released judgements, run the mock panel, and execute the offline test suites.
+FActScore is the one exception: building it, and hence `tools/joincheck.py` and `make check`, first needs its annotation file, which is not redistributed here; `$PY tools/fetch_factscore.py` gives the download route and verifies the result (see [Licence](#licence)).
 The editable install is what lets `tests/` and `diagnostics/` `import raim` without living next to the package; every orchestration script still resolves its interpreter explicitly (see below), so this is the only place an activated environment matters.
 The heavy dependencies are imported lazily, inside the methods that need them, so an import never drags in a runtime the caller was not going to use.
 
@@ -258,7 +261,7 @@ $PY scripts/run.py --dataset medhallu --backend vllm --gpu-util 0.90      # one 
 ### Reference judges
 
 ```bash
-bash scripts/run_judge.sh                        # list every leg and whether it can run here
+bash scripts/run_judge.sh                        # list every leg and whether its prerequisites are met here
 LEG=sonnet bash scripts/run_judge.sh             # the frontier judge; API only, no GPU
 LEG=oss    bash scripts/run_judge.sh             # the Qwen 32B + 72B AWQ ladder, 2-card box
 LEG=pt     bash scripts/run_judge.sh             # Prometheus-2, JudgeLM, Auto-J
@@ -271,6 +274,8 @@ LEG=all PLAN=1 bash scripts/run_judge.sh         # what a full pass would do, ru
 > **Note on there being no default.**
 > A bare `bash scripts/run_judge.sh` prints the registry rather than running anything: `LEG=all` is real money and real GPU hours, so it is a sentence someone has to type.
 > `PLAN=1` prints the exact invocations a run would make, which is the cheap way to check a box's state before spending on it.
+> On a tree that already holds every measurement, as the released one does, it prints only `[skip]` lines, since nothing is left to run.
+> Please notice that `ready`, in the registry, means that a leg's API key or interpreter is in place; it does not check for a GPU.
 
 > **Note on tags.**
 > Each leg's `--tag` is fixed in the registry (`raim/legs.py`), so two judges cannot land on one another's files through `scripts/run_judge.sh`.
@@ -361,7 +366,7 @@ make export    # project it into ../raim-analysis/verdicts, ~5 MB
 
 # a box measuring its own tree pins it separately, rather than over the release
 $PY tools/verdict_lock.py --runs runs --lock this-box.lock.json
-make export LOCK=this-box.lock.json ANALYSIS=/tmp/export-test
+make export LOCK=this-box.lock.json ANALYSIS=/tmp/export-test   # writes /tmp/export-test/verdicts/
 ```
 
 `tools/export_votes.py` writes a votes-only projection of the verdict tree into the analysis repository: that is what turns zone 1 into zone 2.
@@ -398,7 +403,7 @@ It therefore exercises the record schema, the assembly path and the analysis rea
 
 A GPU pass is worth running only on purpose.
 Pin the inputs first with `make lockcheck`, and record the vLLM version and GPU model, since inference is not bit-reproducible across either.
-Start with one dataset at a low `--limit` and inspect a record before committing to a full run: it must carry `src_key`, and that key must match `dataset_index/<ds>.jsonl` for the same instance.
+Start with one dataset at a low `--limit` and inspect a record before committing to a full run: it must carry `src_key`, and that key must equal the `src_sha1` of the same instance in `dataset_index/<ds>.jsonl`.
 Check that the gates fire on real output — `tools/coverage_check.py --min 0.95` on the panel, and `tools/assemble_panel.py` if the constrained scorer is in scope.
 
 ## Citation

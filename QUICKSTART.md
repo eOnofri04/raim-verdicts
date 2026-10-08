@@ -39,7 +39,7 @@ python3 -m venv .venv
 export PY=$PWD/.venv/bin/python3
 
 make runs PY=$PY             # seconds: unpack runs.tar.xz, and are the judgements exactly as pinned?
-make check PY=$PY            # ~2 min: does this checkout work at all?
+make check PY=$PY            # seconds to a couple of minutes, by hardware: does this checkout work at all?
 $PY tools/export_votes.py --check     # is ../raim-analysis/verdicts their projection?
 ```
 
@@ -93,6 +93,7 @@ $PY tools/verdict_lock.py --runs runs --lock this-box.lock.json
 make export LOCK=this-box.lock.json ANALYSIS=/tmp/export-test PY=$PY
 ```
 
+`ANALYSIS` names an analysis checkout, so the mirror lands in its `verdicts/` subdirectory (`/tmp/export-test/verdicts/` above), never in `ANALYSIS` itself.
 A directory with no mirror in it needs none of that — `ANALYSIS=/tmp/somewhere` just works, and the manifest records `release_digest: null` rather than claiming one that does not apply.
 `FORCE=1` overrides the guard; it is spelled that way because `make` rejects a leading `--force` as an option of its own.
 

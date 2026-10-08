@@ -90,9 +90,15 @@ tests:
 	@$(call run_tail,$(PY) tests/test_constrained.py,1)
 	@$(call run_tail,$(PY) tests/test_panel_atomic.py,1)
 
+# Its report goes to stdout in full, a failed build's whole message included (where
+# to obtain a file not redistributed here); the datasets library's cache chatter
+# goes to stderr, shown only if the report never started.
 joincheck:
 	@echo "==> join vs the committed index ($(JOINCHECK_NOTE))"
-	@$(call run_tail,$(JOINCHECK_ENV) $(PY) tools/joincheck.py $(JOINCHECK_ARGS),13)
+	@out=$$(mktemp); err=$$(mktemp); \
+	  $(JOINCHECK_ENV) $(PY) tools/joincheck.py $(JOINCHECK_ARGS) >$$out 2>$$err; st=$$?; \
+	  if [ -s $$out ]; then sed '/./,$$!d' $$out; else tail -13 $$err; fi; \
+	  rm -f $$out $$err; exit $$st
 
 # The frozen-artefact check: regenerate the index somewhere disposable and diff.
 # Run this after ANY change to raim/tasks.py — it is what proves the builders

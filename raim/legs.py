@@ -279,8 +279,10 @@ def main() -> None:
     if args.list or not args.leg:
         _list()
         if not args.leg:
-            print("\nPick one with --leg. There is no default: `all` is real "
-                  "money and real GPU hours.")
+            print("\nPick one with LEG=<leg> bash scripts/run_judge.sh (--leg, "
+                  "calling raim.legs directly). There is no default: `all` is real "
+                  "money and real GPU hours.\n'ready' means the leg's API key or "
+                  "interpreter is in place; it does not check for a GPU.")
         return
 
     failed = sweep(select(args.leg), runs=Path(args.runs), contrast=args.contrast,

@@ -129,7 +129,7 @@ def main() -> int:
     print(f"\njoincheck: {mode}; reference = committed dataset_index/"
           + (" + runs/" if args.vs_verdicts else ""))
 
-    rows, failures = [], 0
+    rows, failures, errors = [], 0, {}
     for ds in args.datasets:
         idx = load_index(ds)
         if idx is None:
@@ -139,7 +139,8 @@ def main() -> int:
         try:
             _task, inst = build_instances(ds)
         except Exception as e:
-            rows.append((ds, "BUILD FAILED", f"{type(e).__name__}: {e}"[:56], ""))
+            errors[ds] = f"{type(e).__name__}: {e}"
+            rows.append((ds, "BUILD FAILED", errors[ds].splitlines()[0][:56], ""))
             failures += 1
             continue
 
@@ -171,6 +172,11 @@ def main() -> int:
     for ds, verdict, detail, vdiag in rows:
         print(f"{ds:<{w}}  {verdict:<9}  {detail:<46}"
               + (f"  {vdiag}" if args.vs_verdicts else ""))
+
+    # The table cuts a build error to one line; what it says next -- the expected
+    # path, the route to a file not redistributed here -- is printed in full below.
+    for ds, err in errors.items():
+        print(f"\n{ds}: {err}")
 
     if failures:
         print(f"\n{failures} dataset(s) did not reproduce the committed index.")
