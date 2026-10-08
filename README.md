@@ -2,6 +2,7 @@
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg)](LICENSE)
 [![arXiv](https://img.shields.io/badge/arXiv-2609.39229-b31b1b)](https://arxiv.org/abs/2609.39229)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23233720.svg)](https://doi.org/10.5281/zenodo.23233720)
 [![Companion](https://img.shields.io/badge/companion-raim--analysis-238636)](https://github.com/eOnofri04/raim-analysis)
 [![Data](https://img.shields.io/badge/verdicts-284_files,_167_MB-blue)](#artefact-zones)
 
@@ -436,6 +437,7 @@ If you use this code or the released verdicts, please cite the paper:
 ```
 
 GitHub's "Cite this repository" button reads the same entry from `CITATION.cff`.
+The software itself is archived on Zenodo under the concept DOI [10.5281/zenodo.23233720](https://doi.org/10.5281/zenodo.23233720), which always resolves to the latest release.
 
 ## Licence
 
